@@ -140,7 +140,7 @@ Figure 8.12 - RTPS Sub message Elements
 
 ## 8.3.5.1 The GuidPrefix, and EntityId 
 
-These Sub message Elements are used to contain the Gui d Prefix t and EntityId_t parts of a GUID_t (defined in 8.2.4.1) within Sub messages.
+These Sub message Elements are used to contain the GuidPrefix_t and EntityId_t parts of a GUID_t (defined in 8.2.4.1) within Sub messages.
 
 Table 8.17 - Structure of the GuidPrefix Sub message Element 
 
@@ -435,7 +435,7 @@ The Writer is uniquely identified by its GUID. The Writer GUID is obtained using
 
 The Reader is uniquely identified by its GUID. The Reader GUID is obtained using the state of the Receiver: readerGUID  $=$  { Receiver.de st Gui d Prefix, Data.readerId } 
 
-The Data.readerId can be ENTITY ID UNKNOWN, in which case the Data applies to all Readers of that writerGUID within the Participant identified by the Gui d Prefix t Receiver.de st Gui d Prefix.
+The Data.readerId can be ENTITY ID UNKNOWN, in which case the Data applies to all Readers of that writerGUID within the Participant identified by the GuidPrefix_t Receiver.de st Gui d Prefix.
 
 ## 8.3.7.3 DataFrag 
 
@@ -661,7 +661,7 @@ This Submessage is invalid when any of the following is true: - sub message Leng
 
 ##  Change in state of Receiver 
 
-if (Info Destination.guidPrefix ! $=$  GUI D PREFIX UNKNOWN) { Receiver.de st Gui d Prefix  $=$  Info Destination.guidPrefix } else { Receiver.de st Gui d Prefix  $=$  <Gui d Prefix t of the Participant receiving               the_message > } 
+if (Info Destination.guidPrefix ! $=$  GUI D PREFIX UNKNOWN) { Receiver.de st Gui d Prefix  $=$  Info Destination.guidPrefix } else { Receiver.de st Gui d Prefix  $=$  <GuidPrefix_t of the Participant receiving               the_message > } 
 
 ##  Logical Interpretation 
 
@@ -744,7 +744,9 @@ This Submessage is invalid when the following is true:
 ## Change in state of Receiver 
 
 if ( !Info Timestamp.Invalidate Flag)
- {   Receiver.have Timestamp  $=$  true   Receiver.timestamp  $=$  Info Timestamp.timestamp } else {   Receiver.have Timestamp  $=$  false } 
+ {
+  Receiver.have Timestamp  $=$  true   Receiver.timestamp  $=$  Info Timestamp.timestamp } else {
+  Receiver.have Timestamp  $=$  false } 
 
 ## Logical Interpretation 
 

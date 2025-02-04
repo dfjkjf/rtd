@@ -211,7 +211,11 @@ This operation creates a new RTPS Writer .
 
 The newly-created writer ‘this’ is initialized as follows:
 
-this.guid : $=$  <as specified in the constructor>;  this.uni cast Locator List : $=\zeta+\alpha s$  specified in the constructor>; this.multi cast Locator List : $=\zeta+\alpha s$  specified in the constructor>; this.reliability Level : $=\zeta+\alpha s$  specified in the constructor>;  this.topicKind : $=\zeta+\alpha s$  specified in the constructor>;  this.pushMode : $=$  <as specified in the constructor>;  this.heartbeat Period : $=\zeta+\alpha s$  specified in the constructor>; this.nac k Response Delay : $=\zeta+\alpha s$  specified in the constructor>; this.nac k Suppression Duration : $=\zeta+\alpha s$  specified in the constructor>; this.last Change Sequence Number : $\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\$ ; this.writer cache : $=$  new History Cache;
+this.guid : $=$  <as specified in the constructor>;
+this.uni cast Locator List : $=\zeta+\alpha s$  specified in the constructor>; this.multi cast Locator List : $=\zeta+\alpha s$  specified in the constructor>; this.reliability Level : $=\zeta+\alpha s$  specified in the constructor>;
+this.topicKind : $=\zeta+\alpha s$  specified in the constructor>;
+this.pushMode : $=$  <as specified in the constructor>;
+this.heartbeat Period : $=\zeta+\alpha s$  specified in the constructor>; this.nac k Response Delay : $=\zeta+\alpha s$  specified in the constructor>; this.nac k Suppression Duration : $=\zeta+\alpha s$  specified in the constructor>; this.last Change Sequence Number : $\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\$ ; this.writer cache : $=$  new History Cache;
 
 ##  new_change
 
@@ -282,13 +286,15 @@ this.requested changes : $=$  <empty>; this.unsent changes : $=$  RTPS::Writer.w
 
 This operation returns the Cache Change for the Reader Locator that has the lowest sequence number of the requested changes. This represents the next repair packet that should be sent to the RTPS Reader located at this Reader Locator in response to a previous AckNack message (see 8.3.7.1) from the Reader .
 
-next seq num : $=~\mathrm{{MANN}}$  {change.sequence Number           SUCH-THAT change IN this.requested changes()};  return change IN this.requested changes()           SUCH-THAT (change.sequence Number  $==$  next seq num);
+next seq num : $=~\mathrm{{MANN}}$  {change.sequence Number           SUCH-THAT change IN this.requested changes()};
+return change IN this.requested changes()           SUCH-THAT (change.sequence Number  $==$  next seq num);
 
 ##  next unsent change
 
 This operation returns the Cache Change for the Reader Locator that has the lowest sequence number of unsent changes. This represents the next change that should be sent to the RTPS Reader located at this Reader Locator .
 
-next seq num : $=$  MIN { change.sequence Number           SUCH-THAT change IN this.unsent changes()};  return change IN this.unsent changes()      SUCH-THAT (change.sequence Number $==$  next seq num);
+next seq num : $=$  MIN { change.sequence Number           SUCH-THAT change IN this.unsent changes()};
+return change IN this.unsent changes()      SUCH-THAT (change.sequence Number $==$  next seq num);
 
 ##  requested changes
 
@@ -334,7 +340,8 @@ This operation adds the Reader Proxy a reader proxy to the set State ful Writer:
 
 This operation removes the Reader Proxy a reader proxy from the set State ful Writer::matched readers.
 
-REMOVE a reader proxy FROM {this.matched readers};  delete proxy;
+REMOVE a reader proxy FROM {this.matched readers};
+delete proxy;
 
 ##  matched reader lookup
 
@@ -362,9 +369,13 @@ Table 8.56 - Reader Proxy Operations
 
 This operation creates a new RTPS Reader Proxy . The newly-created reader proxy ‘this’ is initialized as follows:
 
-this.attributes : $=\zeta+\mathrm{a}\,s$  specified in the constructor>;  this.changes for reader : $=$  RTPS::Writer.writer cache.changes; 
+this.attributes : $=\zeta+\mathrm{a}\,s$  specified in the constructor>;
+this.changes for reader : $=$  RTPS::Writer.writer cache.changes; 
 FOR_EACH change IN (this.changes for reader) DO { IF ( DDS_FILTER(this, change))
- THEN change.is relevant : $=$  FALSE;  ELSE change.is relevant : $=$  TRUE;  IF ( RTPS::Writer.pushMode  $==$  true) THEN change.status : $=$  UNSENT;  ELSE change.status : $=$  UNACKNOWLEDGED; }
+ THEN change.is relevant : $=$  FALSE;
+ELSE change.is relevant : $=$  TRUE;
+IF ( RTPS::Writer.pushMode  $==$  true) THEN change.status : $=$  UNSENT;
+ELSE change.status : $=$  UNACKNOWLEDGED; }
 
 The above logic indicates that the newly-created Reader Proxy initializes its set of ‘changes for reader’ to contain all the Cache Changes in the Writer’s History Cache.
 
@@ -388,7 +399,8 @@ next seq num : $=$  MIN {change.sequence Number     SUCH-THAT change IN this.req
 
 This operation returns the Cache Change for the Reader Proxy that has the lowest sequence number among the changes with status ‘UNSENT.’ This represents the next change that should be sent to the RTPS Reader represented by the Reader Proxy .
 
-next seq num : $=$  MIN { change.sequence Number       SUCH-THAT change IN this.unsent changes() };  return change IN this.unsent changes()       SUCH-THAT (change.sequence Number  $==$  next seq num);
+next seq num : $=$  MIN { change.sequence Number       SUCH-THAT change IN this.unsent changes() };
+return change IN this.unsent changes()       SUCH-THAT (change.sequence Number  $==$  next seq num);
 
 ##  requested changes
 
@@ -470,7 +482,8 @@ This transition is triggered by the configuration of an RTPS Writer ‘the rtp s
 
 The transition performs the following logical actions in the virtual machine:
 
-the rtp s writer.reader locator remove(the reader locator);  delete the reader locator;
+the rtp s writer.reader locator remove(the reader locator);
+delete the reader locator;
 
 ## 8.4.8.2 Reliable Stateless Writer Behavior
 
@@ -520,7 +533,9 @@ This transition is triggered by the firing of a periodic timer configured to fir
 
 The transition performs the following logical actions in the virtual machine for the Writer ‘the rtp s writer’ and  Reader Locator ‘the reader locator.’
 
-seq num min : $=$  the rtp s writer.writer cache.get seq num min();  seq num max : $=$  the rtp s writer.writer cache.get seq num max(); HEARTBEAT : $=$  new HEARTBEAT(the rtp s writer.writerGuid, seq num min,                                                  seq_num_max);  HEARTBEAT.FinalFlag : $=$  SET; HEARTBEAT.readerId : $=$  ENTITY ID UNKNOWN; sendto the reader locator, HEARTBEAT;
+seq num min : $=$  the rtp s writer.writer cache.get seq num min();
+seq num max : $=$  the rtp s writer.writer cache.get seq num max(); HEARTBEAT : $=$  new HEARTBEAT(the rtp s writer.writerGuid, seq num min,                                                  seq_num_max);
+HEARTBEAT.FinalFlag : $=$  SET; HEARTBEAT.readerId : $=$  ENTITY ID UNKNOWN; sendto the reader locator, HEARTBEAT;
 
 ##  Transition T6
 
@@ -547,7 +562,8 @@ This transition is triggered by the firing of a timer indicating that the durati
 
 This transition is triggered by the guard condition [RL::can_send() $=$ true] indicating that the RTPS Writer ‘the_writer’ has the resources needed to send a change to the RTPS Reader Locator ‘the reader locator.’ The transition performs the following logical actions in the virtual machine.
 
-a_change : $=$  the reader locator.next requested change(); IF a_change IN the_writer.writer cache.changes { DATA $=$ new DATA(a_change); IF (the reader locator.expects Inline Qo s) { DATA.inlineQos : $=$  the_writer.related dd s writer.qos;  DATA.inlineQos $+=$ a_change.inlineQos; }  DATA.readerId : $=$  ENTITY ID UNKNOWN; sendto the reader locator.locator, DATA; }  ELSE {  $\mathtt{G A P}\ =\ \mathtt{n e w}$  GAP(a_change.sequence Number); GAP.readerId : $=$  ENTITY ID UNKNOWN; sendto the reader locator.locator, GAP; }
+a_change : $=$  the reader locator.next requested change(); IF a_change IN the_writer.writer cache.changes { DATA $=$ new DATA(a_change); IF (the reader locator.expects Inline Qo s) { DATA.inlineQos : $=$  the_writer.related dd s writer.qos;
+DATA.inlineQos $+=$ a_change.inlineQos; }  DATA.readerId : $=$  ENTITY ID UNKNOWN; sendto the reader locator.locator, DATA; }  ELSE {  $\mathtt{G A P}\ =\ \mathtt{n e w}$  GAP(a_change.sequence Number); GAP.readerId : $=$  ENTITY ID UNKNOWN; sendto the reader locator.locator, GAP; }
 
 After the transition the following post-conditions hold:
 
@@ -565,7 +581,8 @@ This transition is triggered by the configuration of an RTPS Writer ‘the rtp s
 
 The transition performs the following logical actions in the virtual machine:
 
-the rtp s writer.reader locator remove(the reader locator);  delete the reader locator;
+the rtp s writer.reader locator remove(the reader locator);
+delete the reader locator;
 
 ## 8.4.9 RTPS State ful Writer Behavior
 
@@ -629,7 +646,10 @@ This transition is triggered by the addition of a new Cache Change ‘a_change�
 
 The transition performs the following logical actions in the virtual machine:
 
-ADD a_change TO the reader proxy.changes for reader;  IF (DDS_FILTER(the reader proxy, change)) THEN change.is relevant : $=$  FALSE; ELSE change.is relevant : $=$  TRUE;  IF (the rtp s writer.pushMode $==$  true) THEN change.status : $=$  UNSENT;    ELSE change.status : $=$  UNACKNOWLEDGED;
+ADD a_change TO the reader proxy.changes for reader;
+IF (DDS_FILTER(the reader proxy, change)) THEN change.is relevant : $=$  FALSE; ELSE change.is relevant : $=$  TRUE;
+IF (the rtp s writer.pushMode $==$  true) THEN change.status : $=$  UNSENT;
+   ELSE change.status : $=$  UNACKNOWLEDGED;
 
 ##  Transition T6
 
@@ -637,7 +657,8 @@ This transition is triggered by the configuration of an RTPS Writer ‘the rtp s
 
 The transition performs the following logical actions in the virtual machine:
 
-the rtp s writer.matched reader remove(the reader proxy);  delete the reader proxy;
+the rtp s writer.matched reader remove(the reader proxy);
+delete the reader proxy;
 
 ## 8.4.9.2 Reliable State ful Writer Behavior
 
@@ -706,7 +727,10 @@ This transition is triggered by the firing of a periodic timer configured to fir
 
 The transition performs the following logical actions for the State ful Writer ‘the rtp s writer’ in the virtual machine:
 
-seq num min : $=$  the rtp s writer.writer cache.get seq num min();  seq num max : $=$  the rtp s writer.writer cache.get seq num max(); HEARTBEAT : $=$  new HEARTBEAT(the rtp s writer.writerGuid,               seq_num_min, seq_num_max);  HEARTBEAT.FinalFlag : $=$  NOT_SET; HEARTBEAT.readerId : $=$  ENTITY ID UNKNOWN;  send HEARTBEAT;
+seq num min : $=$  the rtp s writer.writer cache.get seq num min();
+seq num max : $=$  the rtp s writer.writer cache.get seq num max(); HEARTBEAT : $=$  new HEARTBEAT(the rtp s writer.writerGuid,               seq_num_min, seq_num_max);
+HEARTBEAT.FinalFlag : $=$  NOT_SET; HEARTBEAT.readerId : $=$  ENTITY ID UNKNOWN;
+send HEARTBEAT;
 
 ##  Transition T8
 
@@ -764,7 +788,8 @@ This transition is triggered by the addition of a new Cache Change ‘a_change�
 
 The transition performs the following logical actions in the virtual machine:
 
-ADD a_change TO the reader proxy.changes for reader; IF (DDS_FILTER(the reader proxy, change)) THEN a_change.is relevant : $=$  FALSE; ELSE a_change.is relevant : $=$  TRUE; IF (the rtp s writer.pushMode  $==$  true) THEN a_change.status : $=$  UNSENT;    ELSE a_change.status : $=$  UNACKNOWLEDGED;
+ADD a_change TO the reader proxy.changes for reader; IF (DDS_FILTER(the reader proxy, change)) THEN a_change.is relevant : $=$  FALSE; ELSE a_change.is relevant : $=$  TRUE; IF (the rtp s writer.pushMode  $==$  true) THEN a_change.status : $=$  UNSENT;
+   ELSE a_change.status : $=$  UNACKNOWLEDGED;
 
 ## Transition T15
 
@@ -839,7 +864,9 @@ This operation creates a new RTPS Reader .
 
 The newly-created reader ‘this’ is initialized as follows:
 
-this.guid : $=$  <as specified in the constructor>;  this.uni cast Locator List : $=\zeta+\alpha s$  specified in the constructor>; this.multi cast Locator List : $=\zeta+\alpha s$  specified in the constructor>; this.reliability Level : $=\zeta+\alpha s$  specified in the constructor>;  this.topicKind : $=\zeta+\alpha s$  specified in the constructor>; 
+this.guid : $=$  <as specified in the constructor>;
+this.uni cast Locator List : $=\zeta+\alpha s$  specified in the constructor>; this.multi cast Locator List : $=\zeta+\alpha s$  specified in the constructor>; this.reliability Level : $=\zeta+\alpha s$  specified in the constructor>;
+this.topicKind : $=\zeta+\alpha s$  specified in the constructor>; 
 this.expects Inline Qo s : $=$  <as specified in the constructor>; this.heartbeat Response Delay : $=\zeta+\alpha s$  specified in the constructor>; this.reader cache : $=$  new History Cache;
 
 ## 8.4.10.2 RTPS Stateless Reader
@@ -873,7 +900,8 @@ Table 8.66 - State ful Reader Operations
 
 This operation creates a new RTPS State ful Reader . The newly-created stateful reader ‘this’ is initialized as follows:
 
-this.attributes : $=$  <as specified in the constructor>;  this.matched writers : $=$  <empty>;
+this.attributes : $=$  <as specified in the constructor>;
+this.matched writers : $=$  <empty>;
 
 ## matched writer add
 
@@ -887,7 +915,8 @@ This operation removes the Writer Proxy a writer proxy from the set State ful Re
 
 This operation finds the Writer Proxy with GUID_t a writer gui d from the set State ful Reader::matched writers.
 
-FIND proxy IN this.matched writers         SUCH-THAT (proxy.remote Writer Gui d $==$  a writer gui d);  return proxy;
+FIND proxy IN this.matched writers         SUCH-THAT (proxy.remote Writer Gui d $==$  a writer gui d);
+return proxy;
 
 ## 8.4.10.4 RTPS Writer Proxy
 
@@ -909,7 +938,8 @@ This operation creates a new RTPS Writer Proxy .
 
 The newly-created writer proxy ‘this’ is initialized as follows:
 
-this.attributes : $=\zeta+\alpha s$  specified in the constructor>;  this.changes from writer : $=\ \varsigma a1.1$  past and future samples from the writer>;
+this.attributes : $=\zeta+\alpha s$  specified in the constructor>;
+this.changes from writer : $=\ \varsigma a1.1$  past and future samples from the writer>;
 
 The changes from writer of the newly-created Writer Proxy is initialized to contain all past and future samples from the Writer represented by the Writer Proxy . This is a conceptual representation only, used to describe the Stateful Reference Implementation. The Change From Writer status of each Cache Change in changes from writer is initialized to UNKNOWN, indicating the State ful Reader initially does not know whether any of these changes actually already exist. As discussed in 8.4.12.3, the status will change to RECEIVED or MISSING as the State ful Reader receives the actual changes or is informed about their existence via a HEARTBEAT message.
 
@@ -961,7 +991,8 @@ This operation modifies the status of the Change From Writer that refers to the 
 
 Sequence Number t ‘a_seq_num.’ The status of the change is set to ‘RECEIVED,’ indicating it has been received. Logical action in the virtual machine:
 
-FIND change FROM this.cha;nge s from writer      SUCH-THAT change.sequence Number $==$  a_seq_num;  change.status : $=$  RECEIVED
+FIND change FROM this.cha;nge s from writer      SUCH-THAT change.sequence Number $==$  a_seq_num;
+change.status : $=$  RECEIVED
 
 ## 8.4.10.5 RTPS Change From Writer
 
@@ -1048,8 +1079,11 @@ The Best-Effort reader checks that the sequence number associated with the chang
 
 The transition performs the following logical actions in the virtual machine:
 
-a_change : $=$ new Cache Change(DATA); writer gui d : $=$  {Receiver.Source Gui d Prefix, DATA.writerId};  writer proxy : $=$  the rtp s reader.matched writer lookup(writer gui d); expected seq num : $=$  writer proxy.available changes max()  $+\_1$ ;  if ( a_change.sequence Number $>=$  expected seq num)
- { the rtp s reader.reader cache.add_change(a_change); writer proxy.received change set(a_change.sequence Number);    if ( a_change.sequence Number $>$  expected seq num)
+a_change : $=$ new Cache Change(DATA); writer gui d : $=$  {Receiver.Source Gui d Prefix, DATA.writerId};
+writer proxy : $=$  the rtp s reader.matched writer lookup(writer gui d); expected seq num : $=$  writer proxy.available changes max()  $+\_1$ ;
+if ( a_change.sequence Number $>=$  expected seq num)
+ { the rtp s reader.reader cache.add_change(a_change); writer proxy.received change set(a_change.sequence Number);
+   if ( a_change.sequence Number $>$  expected seq num)
  { writer proxy.lost changes update(a_change.sequence Number); }  }
 
 After the transition the following post-conditions hold:
@@ -1062,7 +1096,8 @@ This transition is triggered by the configuration of an RTPS Reader ‘the rtp s
 
 The transition performs the following logical actions in the virtual machine:
 
-the rtp s reader.matched writer remove(the writer proxy);  delete the writer proxy;
+the rtp s reader.matched writer remove(the writer proxy);
+delete the writer proxy;
 
 ## Transition T4
 
@@ -1159,7 +1194,8 @@ This transition is triggered by the configuration of an RTPS Reader ‘the rtp s
 
 The transition performs the following logical actions in the virtual machine:
 
-the rtp s reader.matched writer remove(the writer proxy);  delete the writer proxy;
+the rtp s reader.matched writer remove(the writer proxy);
+delete the writer proxy;
 
 ## 8.4.12.3 Change From Writer illustrated
 
@@ -1232,7 +1268,7 @@ Figure 8.26 defines the Participant Message Data datatype associated with the RT
 
 The liveliness of a subset of Writers belonging to a Participant is asserted by writing a sample to the Built in Participant Message Writer . If the Participant contains one or more Writers with a liveliness of AUTOMATIC LIVELINESS QO S, then one sample is written at a rate faster than the smallest lease duration among the Writers sharing this QoS. Similarly, a separate sample is written if the Participant contains one or more Writers with a liveliness of MANUAL BY PARTICIPANT LIVELINESS QO S at a rate faster than the smallest lease duration among these Writers . The two instances are orthogonal in purpose so that if a Participant contains Writers of each of the two liveliness kinds described, two separate instances must be periodically written. The instances are distinguished using their DDS key, which is comprised of the participant Gui d Prefix and kind fields. Each of the two types of liveliness QoS handled through this protocol will result in a unique kind field and therefore form two distinct instances in the History Cache .
 
-In both liveliness cases the participant Gui d Prefix field contains the Gui d Prefix t of the Participant that is writing the data (and therefore asserting the liveliness of its Writers)
+In both liveliness cases the participant Gui d Prefix field contains the GuidPrefix_t of the Participant that is writing the data (and therefore asserting the liveliness of its Writers)
 .
 
 The DDS liveliness kind MANUAL BY TOPIC LIVELINESS QO S is not implemented using the  Built in Participant Message Writer and Built in Participant Message Reader . It is discussed in 8.7.2.2.3.

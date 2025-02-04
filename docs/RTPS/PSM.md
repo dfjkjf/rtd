@@ -17,7 +17,7 @@ The suitability of UDP/IP as a transport for DDS applications stems from several
 - Best-effort. UDP/IP provides a best-effort service that maps well to Quality-of-service needs of many real-time data streams. In the situations where it is needed, the RTPS protocol provides the mechanism to attain reliable delivery on top of the best-effort service provided by UDP.
 - Connection less. UDP/IP offers a connection less service; this allows multiple RTPS endpoints to share a single operat- ing-system UDP resource (socket/port) while allowing for interleaving of messages effectively providing an out-of- band mechanism for each separate data-stream.
 - Predictable behavior. Unlike TCP, UDP does not introduce timers that would cause operations to block for varying amounts of time. As such, it is simpler to model the impact of using UDP on a real-time application.
-- S cal ability and multicast support. UDP/IP natively supports multicast which allows efficient distribution of a single message to a large number of recipients.
+- Scalability and multicast support. UDP/IP natively supports multicast which allows efficient distribution of a single message to a large number of recipients.
 
 ## 9.2 Notational Conventions 
 
@@ -28,53 +28,75 @@ All the definitions in this document are part of the “RTPS” name-space. To f
 ## 9.2.2 IDL Representation of Structures and CDR Wire Representation 
 
 The following sub clauses often define structures, such as: 
+```
+typedef octet Octet Array 3[3];
 
-typedef octet Octet Array 3[3];  struct EntityId_t { Octet Array 3 entityKey; octet entityKind; } ; 
+struct EntityId_t { 
+  OctetArray3 entityKey;
+  octet entityKind; 
+};
+```
 
 These definitions use the OMG IDL (Interface Definition Language). When these structures are sent on the wire, they are encoded using the corresponding CDR representation.
 
 ## 9.2.3 Representation of Bits and Bytes 
 
 This document often uses the following notation to represent an octet or byte: 
-
-+-+-+-+-+-+-+-+-+ |7|6|5|4|3|2|1|0| +-+-+-+-+-+-+-+-+ 
-
+```
++-+-+-+-+-+-+-+-+
+|7|6|5|4|3|2|1|0|
++-+-+-+-+-+-+-+-+ 
+```
 In this notation, the leftmost bit (bit 7) is the most significant bit ("MSB") and the rightmost bit (bit 0) is the least significant bit (“LSB”).
 
-Streams of bytes are ordered per lines of 4 bytes each as follows: 
+Streams of bytes are ordered per lines of 4 bytes each as follows:
+```
+0...2...........7...............15.............23..............31
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|  first byte   |               |               |    4th byte   |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+               -----------stream------------->>>>
+```
 In this representation, the byte that comes first in the stream is on the left. The bit on the extreme left is the MSB of the first byte; the bit on the extreme right is the LSB of the 4th byte.
 
 ## 9.3 Mapping of the RTPS Types 
 
 ## 9.3.1 The Globally Unique Identifier (GUID)
 
-The GUID is an attribute present in all RTPS Entities that uniquely identifies them within the DDS domain (see 8.2.4.1). The PIM defines the GUID as composed of a Gui d Prefix t prefix capable of holding 12 bytes, and an EntityId_t entityId capable of holding 4 bytes. This sub clause defines how the PSM maps those structures.
+The GUID is an attribute present in all RTPS Entities that uniquely identifies them within the DDS domain (see 8.2.4.1). The PIM defines the GUID as composed of a GuidPrefix_t prefix capable of holding 12 bytes, and an EntityId_t entityId capable of holding 4 bytes. This sub clause defines how the PSM maps those structures.
 
-## 9.3.1.1 Mapping of the Gui d Prefix t 
+## 9.3.1.1 Mapping of the GuidPrefix_t 
 
-The PSM maps the Gui d Prefix t to the following structure: 
-
-typedef octet Gui d Prefix t[12]; 
-
-The reserved constant GUI D PREFIX UNKNOWN defined by the PIM is mapped to: 
-
-#define GUI D PREFIX UNKNOWN { $0\!\times\!0\,0$ , $0\!\times\!00$ , $0\!\times\!0\,0$ , $0\!\times\!0\,0$ , $0\!\times\!00$ , $0\!\times\!00$ , $0\!\times\!00$ , $0\!\times\!0\,0$ , $0\!\times\!0\,0$ , $0\!\times\!0\,0$ , $0\!\times\!00$ , $0\!\times\!0\,0$ } 
+The PSM maps the GuidPrefix_t to the following structure: 
+```
+typedef octet GuidPrefix_t[12]; 
+```
+The reserved constant GUIDPREFIXUNKNOWN defined by the PIM is mapped to: 
+```
+#define GUIDPREFIX_UNKNOWN {0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00}
+```
 
 ## 9.3.1.2 Mapping of the EntityId_t 
 
 8.2.4.3 states that the EntityId_t is the unique identification of the Endpoint within the Participant . The PSM maps the EntityId_t to the following structure: 
-
-typedef octet Octet Array 3[3]; struct { Octet Array 3 entityKey; octet entityKind; }; 
-
-The reserved constant ENTITY ID UNKNOWN defined by the PIM is mapped to: #define ENTITY ID UNKNOWN { $\{\,0\,{\bf x}\,0\,0$ ,  $0\!\times\!0\,0$ ,  $0\!\times\!0\,0$ },  $0\!\times\!0\,0$ } 
-
+```
+typedef octet OctetArray3[3]; 
+struct {
+    OctetArray3 entityKey;
+    octet entityKind;
+}; 
+```
+The reserved constant ENTITY ID UNKNOWN defined by the PIM is mapped to:
+```
+#define ENTITYID_UNKNOWN {{0x00, 0x00, 0x00}, 0x00}
+```
 The entityKind field within EntityId_t encodes the kind of Entity ( Participant , Reader , Writer, Reader Group, Writer Group)
  and whether the Entity is a built-in Entity (fully pre-defined by the Protocol, automatically instantiated), a user-defined Entity (defined by the Protocol, but instantiated by the user only as needed by the application) or a vendor-specific Entity (defined by a vendor- specific extension to the Protocol, can therefore be ignored by another vendor’s implementation).
 
 When not pre-defined (see below), the entityKey field within the EntityId_t can be chosen arbitrarily by the middleware implementation as long as the resulting EntityId_t is unique within the Participant.
 
 The information on whether the object is a built-in entity, a vendor-specific entity, or a user-defined entity is encoded in the two most-significant bits of the entityKind . These two bits are set to: 
-- $\mathrm{\Sigma^{\bullet}}00^{\bullet}$  for user-defined entities.
+- ‘00’ for user-defined entities.
 - ‘11’ for built-in entities.
 - ‘01’ for vendor-specific entities.
 
@@ -108,7 +130,10 @@ Table 9.4 - Deprecated EntityIds in version 2.2 of the protocol
 
 The PSM maps the  $G U D_{-}t$  to the following structure: 
 
-struct GUID_t {   Gui d Prefix t guidPrefix;   EntityId_t entityId; } ; 
+struct GUID_t {
+  GuidPrefix_t guidPrefix;
+  EntityId_t entityId;
+}; 
 
 Sub clause 8.2.4 states that all RTPS Entities with a Domain Participant share the same guidPrefix . Furthermore 8.2.4.2 states that implement or s have freedom to choose the guidPrefix as long as each Domain Participant within a DDS Domain has a unique guidPrefix . The PIM restricts this freedom.
 
@@ -158,7 +183,8 @@ typedef unsigned long DomainId_t;
 
  }; 
 
-  typedef octet KeyHash_t[16]; typedef octet Status Info t[4]; typedef short Parameter Id t;  struct Content Filter Property t { 
+  typedef octet KeyHash_t[16]; typedef octet Status Info t[4]; typedef short Parameter Id t;
+struct Content Filter Property t { 
 
    string $<\!256\!>$  content Filtered Topic Name; 
 
@@ -168,15 +194,30 @@ typedef unsigned long DomainId_t;
 
    string filter Expression; 
 
-   sequence<string> expression Parameters; };  typedef sequence<long> Filter Result t; typedef long Filter Signature t[4]; typedef sequence<Filter Signature t> Filter Signature Sequence; struct Content Filter Info t {   Filter Result t filter Result;   Filter Signature Sequence filter Signatures; };  struct Property_t {   string name;   string value; };  typedef string Entity Name t;  struct Original Writer Info t {   GUID_t original Writer GUI D;   Sequence Number t original WriterS N;   Parameter List original Writer Qo s; }; 
+   sequence<string> expression Parameters; };
+typedef sequence<long> Filter Result t; typedef long Filter Signature t[4]; typedef sequence<Filter Signature t> Filter Signature Sequence; struct Content Filter Info t {
+  Filter Result t filter Result;
+  Filter Signature Sequence filter Signatures; };
+struct Property_t {
+  string name;
+  string value; };
+typedef string Entity Name t;
+struct Original Writer Info t {
+  GUID_t original Writer GUI D;
+  Sequence Number t original WriterS N;
+  Parameter List original Writer Qo s; }; 
 typedef octet Group Digest t[4]; 
 
 /\* The following bitmask identifies protocol-specific builtin endpoints.  Vendor-specific builtin endpoints may be identified by a new vendor-specific   Parameter Id. Refer to section 9.6.2.2.1 Parameter Id space for the range of   Parameter Ids that are available for vendor-specific extensions.\*/ 
 
-bitmask Built in Endpoint Set t {   @position(0) DISC BUILT IN ENDPOINT PARTICIPANT ANNOUNCER,   @position(1) DISC BUILT IN ENDPOINT PARTICIPANT DETECTOR,   @position(2) DISC BUILT IN ENDPOINT PUBLICATIONS ANNOUNCER,   @position(3) DISC BUILT IN ENDPOINT PUBLICATIONS DETECTOR,   @position(4) DISC BUILT IN ENDPOINT SUBSCRIPTIONS ANNOUNCER,   @position(5) DISC BUILT IN ENDPOINT SUBSCRIPTIONS DETECTOR, 
+bitmask Built in Endpoint Set t {
+  @position(0) DISC BUILT IN ENDPOINT PARTICIPANT ANNOUNCER,   @position(1) DISC BUILT IN ENDPOINT PARTICIPANT DETECTOR,   @position(2) DISC BUILT IN ENDPOINT PUBLICATIONS ANNOUNCER,   @position(3) DISC BUILT IN ENDPOINT PUBLICATIONS DETECTOR,   @position(4) DISC BUILT IN ENDPOINT SUBSCRIPTIONS ANNOUNCER,   @position(5) DISC BUILT IN ENDPOINT SUBSCRIPTIONS DETECTOR, 
 
 /\* The following have been deprecated in version 2.4 of the     specification. These bits should not be used by versions of the       protocol equal to or newer than the deprecated version unless     they are used with the same meaning as in versions prior to the     deprecated version.    @position(6) DISC BUILT IN ENDPOINT PARTICIPANT PROXY ANNOUNCER,     @position(7) DISC BUILT IN ENDPOINT PARTICIPANT PROXY DETECTOR,     @position(8) DISC BUILT IN ENDPOINT PARTICIPANT STATE ANNOUNCER,     @position(9) DISC BUILT IN ENDPOINT PARTICIPANT STATE DETECTOR,   \*/ 
-@position(10) BUILT IN ENDPOINT PARTICIPANT MESSAGE DATA WRITER,   @position(11) BUILT IN ENDPOINT PARTICIPANT MESSAGE DATA READER,     /\* Bits 12-15 have been reserved by the DDS-Xtypes 1.2 Specification     and future revisions thereof.    Bits 16-27 have been reserved by the DDS-Security 1.1 Specification     and future revisions thereof.  \*/     @position(28) DISC BUILT IN ENDPOINT TOPICS ANNOUNCER,   @position(29) DISC BUILT IN ENDPOINT TOPICS DETECTOR };  bitmask Built in Endpoint Qo s t {   @position(0) BEST EFFORT PARTICIPANT MESSAGE DATA READER };  // PROTOCOL RTP S:  //   ProtocolId_t[0] = 'R' //   ProtocolId_t[1] = 'T' //   ProtocolId_t[2] = 'P' //   ProtocolId_t[3] = 'S' typedef octet Protocol Id t[4]; 
+@position(10) BUILT IN ENDPOINT PARTICIPANT MESSAGE DATA WRITER,   @position(11) BUILT IN ENDPOINT PARTICIPANT MESSAGE DATA READER,     /\* Bits 12-15 have been reserved by the DDS-Xtypes 1.2 Specification     and future revisions thereof.    Bits 16-27 have been reserved by the DDS-Security 1.1 Specification     and future revisions thereof.  \*/     @position(28) DISC BUILT IN ENDPOINT TOPICS ANNOUNCER,   @position(29) DISC BUILT IN ENDPOINT TOPICS DETECTOR };
+bitmask Built in Endpoint Qo s t {
+  @position(0) BEST EFFORT PARTICIPANT MESSAGE DATA READER };
+// PROTOCOL RTP S:  //   ProtocolId_t[0] = 'R' //   ProtocolId_t[1] = 'T' //   ProtocolId_t[2] = 'P' //   ProtocolId_t[3] = 'S' typedef octet Protocol Id t[4]; 
 
 ## 9.3.2.1 Time_t 
 
@@ -218,7 +259,11 @@ The range of Locator_t kinds has been divided into the following ranges:
 
 This type is used to represent a group of Entities belonging to the same Participant. The representation uses the IDL structure Entity Id Set t defined below: 
 
-typedef octet Octet Array 3[3];  struct {   Octet Array 3 entityKey;    octet entityKind; }; struct Entity Id Set t {   sequence<EntityId_t> entityIds; }; 
+typedef octet Octet Array 3[3];
+struct {
+  Octet Array 3 entityKey;
+   octet entityKind; }; struct Entity Id Set t {
+  sequence<EntityId_t> entityIds; }; 
 
 In the construction of the entityIds sequence, the values are sorted by increasing values of the EntityId_t . To perform the ordering the EntityId_t , which is 4 octets, is re-interpreted as if it was the little-endian serialized representation of a 32-bit signed integer (the IDL4 int32 primitive type).
 
@@ -375,7 +420,8 @@ A Parameter List contains a list of Parameters , terminated with a sentinel. Eac
 
 The IDL representation for each Parameter is: 
 
-typedef short Parameter Id t; struct Parameter { Parameter Id t parameter Id;  short length; octet value[length]; // Pseudo-IDL: array of non-const length }; 
+typedef short Parameter Id t; struct Parameter { Parameter Id t parameter Id;
+short length; octet value[length]; // Pseudo-IDL: array of non-const length }; 
 
 The parameter Id identifies the type of parameter.
 
@@ -462,7 +508,9 @@ Sub clause 8.3.3.2 in the PIM defined the structure of all Sub messages as compo
 
 The PSM maps the Sub message Header into the following structure: 
 
-struct Sub message Header {    octet sub message Id; octet flags;   unsigned short sub message Length; /\* octets To Next Header \*/ }; 
+struct Sub message Header {
+   octet sub message Id; octet flags;
+  unsigned short sub message Length; /\* octets To Next Header \*/ }; 
 
 With the byte stream representation defined in 9.2.3, the sub message Length is defined as the number of octets from the start of the contents of the Submessage to the start of the next Submessage header. Given this definition, the remainder of the UDP PSM will refer to sub message Length as octets To Next Header . See also 9.4.5.1.3.
 
@@ -788,7 +836,10 @@ The Behavior module within the PIM (8.4) defines the DataType Participant Messag
 
 The PSM maps the Participant Message Data type into the following IDL: 
 
-typedef octet Octet Array 4[4];  typedef sequence<octet> OctetSeq;  struct Participant Message Data { Gui d Prefix t participant Gui d Prefix;  Octet Array 4 kind; OctetSeq data; }; 
+typedef octet Octet Array 4[4];
+typedef sequence<octet> OctetSeq;
+struct Participant Message Data { GuidPrefix_t participant Gui d Prefix;
+Octet Array 4 kind; OctetSeq data; }; 
 
 The following values for the kind field are reserved by RTPS: 
 
@@ -807,7 +858,15 @@ Implementations can decide the upper length of the data field but must be able t
 The Discovery Module within the PIM (8.5) defines the DataTypes S PDP discovered Participant Data , Discovered Writer Data , Discovered Reader Data , and Discovered Topic Data . These types define the logical contents of the data sent between the RTPS built-in Endpoints.
 The PSM maps these types into the following IDL: 
 
-struct S PDP discovered Participant Data {    DDS::Participant Built in Topic Data dd s Participant Data;    Participant Proxy participant Proxy;   Duration_t lease Duration; }; struct Discovered Writer Data {    DDS::Publication Built in Topic Data dd s Publication Data;    Writer Proxy m Writer Proxy; }; struct Discovered Reader Data {    DDS::Subscription Built in Topic Data dd s Subscription Data;    Reader Proxy m Reader Proxy; Content Filter Property t content Filter; }; struct Discovered Topic Data {    DDS::Topic Built in Topic Data dd s Topic Data; }; 
+struct S PDP discovered Participant Data {
+   DDS::Participant Built in Topic Data dd s Participant Data;
+   Participant Proxy participant Proxy;
+  Duration_t lease Duration; }; struct Discovered Writer Data {
+   DDS::Publication Built in Topic Data dd s Publication Data;
+   Writer Proxy m Writer Proxy; }; struct Discovered Reader Data {
+   DDS::Subscription Built in Topic Data dd s Subscription Data;
+   Reader Proxy m Reader Proxy; Content Filter Property t content Filter; }; struct Discovered Topic Data {
+   DDS::Topic Built in Topic Data dd s Topic Data; }; 
 
 where each DDS built-in topic data type is defined by the DDS specification.
 
@@ -952,7 +1011,10 @@ Note that the choice of the algorithm to use depends on the data-type, not on an
 
 Example 1 . Assume the following IDL-described type: 
 
-struct Type With Short Key {   long id;   $/\star$  assume defined as a key field \*/    string name $<\!6\!>$ ;  $/\star$  assume defined as a key field \*/   /\* other non-key fields \*/ }; 
+struct Type With Short Key {
+  long id;
+  $/\star$  assume defined as a key field \*/    string name $<\!6\!>$ ;
+$/\star$  assume defined as a key field \*/   /\* other non-key fields \*/ }; 
 
 Then we know that the maximum size for the CDR representation of the key fields is 15 Bytes (4 for the ‘id’ field, plus 4 for the length of the string ‘name’ plus at most 7 Bytes for the string (includes extra byte for terminating NUL).
 
@@ -968,7 +1030,10 @@ Note that for clarity use a notation where each byte can be represented either a
 
 Example 2 : Assume the following IDL-described type: 
 
-struct Type With Short Key {   long id;   $/\star$  assume defined as a key field \*/    string name ${<}8{>}$ ;  $/\star$  assume defined as a key field \*/    /\* other non-key fields \*/  }; 
+struct Type With Short Key {
+  long id;
+  $/\star$  assume defined as a key field \*/    string name ${<}8{>}$ ;
+$/\star$  assume defined as a key field \*/    /\* other non-key fields \*/  }; 
 
 Then we know that the maximum size for the CDR representation of the key fields is 17 Bytes (4 for the ‘id’ field, plus 4 for the length of the string ‘name’ plus at most 9 Bytes for the string (includes extra byte for terminating NUL).
 

@@ -118,7 +118,7 @@ Table 8.6 - RTPS Entity Attribues
 
 The GUID (Globally Unique Identifier) is an attribute of all RTPS Entities and uniquely identifies the Entity within a DDS Domain.
 
-The GUID is built as a tuple <prefix, entityId> combining a Gui d Prefix t prefix and an EntityId_t entityId .
+The GUID is built as a tuple <prefix, entityId> combining a GuidPrefix_t prefix and an EntityId_t entityId .
 ![](https://cdn-mineru.openxlab.org.cn/model-mineru/prod/9f269255dfb092267edeef2e71fc3623774edd3a20c0c46b456944c2610d3d05.jpg)
 Figure 8.4 - RTPS GUID_t uniquely identifies Entities and is composed of a prefix and a suffix
 
@@ -241,7 +241,9 @@ This operation has no effect if the topicKind $==$ NO_KEY.
 
 The transition performs the following logical actions in the virtual machine:
 
-the rtp s writer : $=$  the dd s writer.related rtp s writer; if (the rtp s writer.topicKind $==$  WITH_KEY) {   a_change : $=$  the rtp s writer.new_change(NOT ALIVE DISPOSED, <nil>,                       inlineQos, handle);   the rtp s writer.writer cache.add_change(a_change); }
+the rtp s writer : $=$  the dd s writer.related rtp s writer; if (the rtp s writer.topicKind $==$  WITH_KEY) {
+  a_change : $=$  the rtp s writer.new_change(NOT ALIVE DISPOSED, <nil>,                       inlineQos, handle);
+  the rtp s writer.writer cache.add_change(a_change); }
 
 After the transition the following post-conditions hold:
 
@@ -255,7 +257,9 @@ This operation has no effect if the topicKind $==$ NO_KEY.
 
 The transition performs the following logical actions in the virtual machine:
 
-the rtp s writer : $=$  the dd s writer.related rtp s writer; if (the rtp s writer.topicKind $==$  WITH_KEY) {   a_change : $=$  the rtp s writer.new_change(NOT ALIVE UNREGISTERED, <nil>,                       inlineQos, handle);   the rtp s writer.writer cache.add_change(a_change); }
+the rtp s writer : $=$  the dd s writer.related rtp s writer; if (the rtp s writer.topicKind $==$  WITH_KEY) {
+  a_change : $=$  the rtp s writer.new_change(NOT ALIVE UNREGISTERED, <nil>,                       inlineQos, handle);
+  the rtp s writer.writer cache.add_change(a_change); }
 
 After the transition the following post-conditions hold:
 
@@ -304,7 +308,10 @@ This transition is triggered by the act of reading data from the DDS DataReader 
 
 The transition performs the following logical actions in the virtual machine:
 
-the rtp s reader : $=$  the dd s reader.related rtp s reader; a change list : $=$ new(); FOREACH change IN the rtp s reader.reader cache.changes {   if DDS_FILTER(the rtp s reader, change) {     ADD change TO a change list;   }   the rtp s reader.reader cache.remove change(a_change); } RETURN a change list;
+the rtp s reader : $=$  the dd s reader.related rtp s reader; a change list : $=$ new(); FOREACH change IN the rtp s reader.reader cache.changes {
+  if DDS_FILTER(the rtp s reader, change) {
+    ADD change TO a change list;
+  }   the rtp s reader.reader cache.remove change(a_change); } RETURN a change list;
 
 The DDS_FILTER() operation reflects the capabilities of the DDS DataReader API to select a subset of changes based on Cache Change::kind , QoS, content-filters and other mechanisms. Note that the logical actions above only reflect the behavior and not necessarily the actual implementation of the protocol.
 

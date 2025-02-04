@@ -228,7 +228,8 @@ Note that how the Endpoints are configured depends on the implementation of the 
 participant data.meta traffic Multi cast Locator List); writer.matched reader add(proxy); ENDIF 
 
 IF ( PUBLICATIONS ANNOUNCER IS_IN participant data.available Endpoints)
- THEN guid $=$  <participant data.guidPrefix,             ENTITY ID SED P BUILT IN PUBLICATIONS ANNOUNCER>;  reader  $=$  local participant.SED P built in Publications Reader; proxy  $=$  new Writer Proxy( guid, participant data.meta traffic Uni cast Locator List, participant data.meta traffic Multi cast Locator List); reader.matched writer add(proxy); 
+ THEN guid $=$  <participant data.guidPrefix,             ENTITY ID SED P BUILT IN PUBLICATIONS ANNOUNCER>;
+reader  $=$  local participant.SED P built in Publications Reader; proxy  $=$  new Writer Proxy( guid, participant data.meta traffic Uni cast Locator List, participant data.meta traffic Multi cast Locator List); reader.matched writer add(proxy); 
 
 ENDIF 
 
@@ -238,7 +239,9 @@ IF ( SUBSCRIPTIONS DETECTOR IS_IN participant data.available Endpoints)
 ENDIF 
 
 IF ( SUBSCRIPTIONS ANNOUNCER IS_IN participant data.available Endpoints)
- THEN  guid  $=$  <participant data.guidPrefix,             ENTITY ID SED P BUILT IN SUBSCRIPTIONS ANNOUNCER>;  reader  $=$  local participant.SED P built in Subscriptions Reader;  proxy  $=$  new Writer Proxy( guid, participant data.meta traffic Uni cast Locator List, participant data.meta traffic Multi cast Locator List); reader.matched writer add(proxy); 
+ THEN  guid  $=$  <participant data.guidPrefix,             ENTITY ID SED P BUILT IN SUBSCRIPTIONS ANNOUNCER>;
+reader  $=$  local participant.SED P built in Subscriptions Reader;
+proxy  $=$  new Writer Proxy( guid, participant data.meta traffic Uni cast Locator List, participant data.meta traffic Multi cast Locator List); reader.matched writer add(proxy); 
 
 ENDIF 
 
@@ -259,7 +262,12 @@ Participant identified by the GUID_t participant gui d .
 
 For the stateful reference implementation, this operation performs the following logical steps: 
 
-guid $=$  <participant gui d.guidPrefix,              ENTITY ID SED P BUILT IN PUBLICATIONS DETECTOR>;  writer  $=$  local participant.SED P built in Publications Writer; proxy  $=$  writer.matched reader lookup(guid); writer.matched reader remove(proxy);  guid $=$  <participant gui d.guidPrefix,              ENTITY ID SED P BUILT IN PUBLICATIONS ANNOUNCER>;  reader  $=$  local participant.SED P built in Publications Reader; proxy  $=$  reader.matched writer lookup(guid); reader.matched writer remove(proxy); guid $=$  <participant gui d.guidPrefix,              ENTITY ID SED P BUILT IN SUBSCRIPTIONS DETECTOR>;  writer  $=$  local participant.SED P built in Subscriptions Writer; proxy  $=$  writer.matched reader lookup(guid); writer.matched reader remove(proxy); guid $=$  <participant gui d.guidPrefix,              ENTITY ID SED P BUILT IN SUBSCRIPTIONS ANNOUNCER>;  reader  $=$  local participant.SED P built in Subscriptions Reader; proxy  $=$  reader.matched writer lookup(guid); reader.matched writer remove(proxy); guid $=$  <participant gui d.guidPrefix, ENTITY ID SED P BUILT IN TOPICS DETECTOR>; writer $=$  local participant.SED P built in Topics Writer; proxy  $=$  writer.matched reader lookup(guid); writer.matched reader remove(proxy); guid $=$  <participant gui d.guidPrefix, ENTITY ID SED P BUILT IN TOPICS ANNOUNCER>; reader  $=$  local participant.SED P built in Topics Reader; proxy  $=$  reader.matched writer lookup(guid); reader.matched writer remove(proxy); 
+guid $=$  <participant gui d.guidPrefix,              ENTITY ID SED P BUILT IN PUBLICATIONS DETECTOR>;
+writer  $=$  local participant.SED P built in Publications Writer; proxy  $=$  writer.matched reader lookup(guid); writer.matched reader remove(proxy);
+guid $=$  <participant gui d.guidPrefix,              ENTITY ID SED P BUILT IN PUBLICATIONS ANNOUNCER>;
+reader  $=$  local participant.SED P built in Publications Reader; proxy  $=$  reader.matched writer lookup(guid); reader.matched writer remove(proxy); guid $=$  <participant gui d.guidPrefix,              ENTITY ID SED P BUILT IN SUBSCRIPTIONS DETECTOR>;
+writer  $=$  local participant.SED P built in Subscriptions Writer; proxy  $=$  writer.matched reader lookup(guid); writer.matched reader remove(proxy); guid $=$  <participant gui d.guidPrefix,              ENTITY ID SED P BUILT IN SUBSCRIPTIONS ANNOUNCER>;
+reader  $=$  local participant.SED P built in Subscriptions Reader; proxy  $=$  reader.matched writer lookup(guid); reader.matched writer remove(proxy); guid $=$  <participant gui d.guidPrefix, ENTITY ID SED P BUILT IN TOPICS DETECTOR>; writer $=$  local participant.SED P built in Topics Writer; proxy  $=$  writer.matched reader lookup(guid); writer.matched reader remove(proxy); guid $=$  <participant gui d.guidPrefix, ENTITY ID SED P BUILT IN TOPICS ANNOUNCER>; reader  $=$  local participant.SED P built in Topics Reader; proxy  $=$  reader.matched writer lookup(guid); reader.matched writer remove(proxy); 
 
 ## 8.5.6 Supporting Alternative Discovery Protocols 
 
