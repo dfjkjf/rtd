@@ -8,12 +8,7 @@ nav_order: 5
 
 ## 1. 概述
 
-RTPS规范，全称为实时发布/订阅协议DDS互操作规范（The **R**eal-**T**ime **P**ublish-**S**ubscribe Protocol (**RTPS**) DDS Interoperability Wire Protocol Specification），RTPS在某些场景下也被叫做 DDSI-RTPS。该协议的作用产生脉络在于：
-
-- DDS接口（DCPS）规范；
-- 不同厂家实现DDS接口规范形成不同的DDS产品；
-- 使用不同DDS产品的系统需要集成，即对不同厂家的DDS互操作、互联互通提出了新的需求；
-- 提出RTPS规范来定义DDS底层的报文格式、行为等内容；
+RTPS规范，全称为实时发布/订阅协议DDS互操作规范（The **R**eal-**T**ime **P**ublish-**S**ubscribe Protocol (**RTPS**) DDS Interoperability Wire Protocol Specification），RTPS在某些场景下也被叫做 DDSI-RTPS。该协议的目的和范围是为了确保基于不同供应商DDS实现的应用程序可以互操作。
 
 RTPS规范的内容参见下图，主要分为4个模块：
 
@@ -46,6 +41,7 @@ rtps规范内容
 | ProtocolVersion_t | 2个字节的数据结构标识RTPS的协议版本 |
 | VendorId_t | 2个字节的数据结构标识供应商的ID |
 
+
 ### 2.2. 重要概念定义
 
 重要的概念定义及其关系如下图所示：
@@ -63,6 +59,7 @@ rtps结构模块关系图
 | Reader | 读者，用于接收数据，每个读者关联一个HistoryCache，用于维护接收到的数据列表； |
 | HistoryCache | 历史数据缓存队列，提供增、删、查的功能，队列中的元素为CacheChange； |
 | CacheChange | 描述一个样本数据，包含发送方标识、序列号、所属数据实例以及负载。 |
+
 
 ## 3. 报文模块
 
@@ -287,6 +284,7 @@ Spdp协议定义了每个参与者必须创建一对内置写者/读者实体，
 | EntityId_t | {\{00,01,00\},c2} | {\{00,01,00\},c7} |
 | 说明 | 用于周期性发送自身包含自身信息的rtps消息 | 用于监听处理 |
 
+
 ParticipantBuiltinTopicData的结构如下图所示，其中比较重要的成员包括：
 
 - metatrafficUnicastLocator，告知其他参与者向这个地址发送SEDP规范相关的内置消息；
@@ -299,7 +297,7 @@ ParticipantBuiltinTopicData结构
 
 ### 5.2. 简单端点发现协议（SEDP）
 
-通过SPDP协议，域参与者之间相互感知，接下来需要通过SEDP协议来互相感知彼此的子实体（主题、数据写者、数据读者），与本地的主题（及相关数据写者、数据读者）进行匹配，从而完成主题数据的按需分发，SEDP通常基于UDP单播，地址为自动获取的本机地址，端口的计算方式：7400+domain_id*250+10+participant_id*2，同理SEDP定义至少两对内置的数据写者以及数据读者分别用于完成数据写者以及数据读者的互相发现，详细信息如下表：
+通过SPDP协议，域参与者之间相互感知，接下来需要通过SEDP协议来互相感知彼此的子实体（主题、数据写者、数据读者），与本地的主题（及相关数据写者、数据读者）进行匹配，从而完成主题数据的按需分发，SEDP通常基于UDP单播，地址为自动获取的本机地址，端口的计算方式：7400+domain\_id\*250+10+participant\_id\*2，同理SEDP定义至少两对内置的数据写者以及数据读者分别用于完成数据写者以及数据读者的互相发现，详细信息如下表：
 
 | 名称 | SEDPBuiltinPublicationsWriter | SEDPBuiltinPublicationsReader |
 | --- | --- | --- |
@@ -309,6 +307,7 @@ ParticipantBuiltinTopicData结构
 | EntityId_t | {\{00,00,03\},c2} | {\{00,00,03\},c7} |
 | 说明 | 用于发送数据写者相关信息 | 用于接收数据写者相关信息 |
 
+
 | 名称 | SEDPBuiltinSubscriptionsWriter | SEDPBuiltinSubscriptionsReader |
 | --- | --- | --- |
 | 主题名 | DCPSSubscription | DCPSSubscription |
@@ -316,6 +315,7 @@ ParticipantBuiltinTopicData结构
 | QoS | {Stateful、内存持久化等} | {Stateful、内存持久化等} |
 | EntityId_t | {\{00,00,04\},c2} | {\{00,00,04\},c7} |
 | 说明 | 用于发送数据读者相关信息 | 用于接收数据读者相关信息 |
+
 
 DiscoveredWriterData以及DiscoveredReaderData所包含的信息如下图所示，其中重要的成员包括：
 

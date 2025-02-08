@@ -4,11 +4,9 @@ title: DCPS规范
 nav_order: 2
 ---
 
-# DCPS规范
-
 ## 1. 概述
 
-DCPS（**D**ata-**C**entric **P**ublish-**S**ubscribe，以数据为中心的发布/订阅）规范是DDS系列规范最初也是最核心的规范，在某些场合DDS规范指的就是DCPS规范。大家可以在[这个链接](https://www.omg.org/spec/DDS/)看到最新的DCPS规范及其相关的附件。最新的DCPS规范是2015年颁布的1.4版本，这个版本相比于1.2版本最大的修改就是把规范里面的某公司硬塞进去的Data Local Reconstruction Layer(DLRL)部分移除了，移除的原因也很简单，这块标准没有厂家去实现。
+DCPS（**D**ata-**C**entric **P**ublish-**S**ubscribe，以数据为中心的发布/订阅）规范是DDS系列规范最初也是最核心的规范，在某些场合DDS规范指的就是DCPS规范。大家可以在[这个链接](https://www.omg.org/spec/DDS/)看到最新的DCPS规范及其相关的附件。
 
 ## 2. DCPS-PIM
 
@@ -72,7 +70,7 @@ DCPS模型中有几个重要的概念来描述系统中传输的数据，如下�
 
 ### 2.2. 接口描述
 
-接口描述部分，这篇文章只讲思路以及给每个类的函数进行，具体的函数参数或者说明省略。
+接口描述部分，这篇文章只讲思路以及每个类的函数名，具体的函数参数或者说明省略。
 
 #### 2.2.1. 基础模块
 
@@ -121,6 +119,7 @@ DDS使用条件（ Condition ）以及等待（ WaitSet ）来实现同步等待
 | 触发方式 | StatusCondition::set_enabled_statuses 设置的关心的状态发生改变 | 数据读者底层有该状态所表示的数据样本的时候触发 | 用户通过监视条件的接口手动设置 |
 | 触发后的动作 | 首先测试发生改变的状态，再调用相应的状态获取方法获取 | 调用数据读者的读取数据方法获取改变的数据 DataReader::read_w_condition DataReader::take_w_condition | 无 |
 
+
 ##### 2.2.1.4. 监听器
 
 DDS通过监听器提供底层状态事件异步回调的机制，每个实体状态在相应的实体监听器中均有相应的回调函数与之对应，实体回调函数与实体状态的对应关系参见 2.2.1.1中的图 。下图显示了DDS中各个监听器的继承关系，即父实体的监听器继承于子类的监听器，这就意味着父实体监听器能够获取所有子实体的状态变化。
@@ -131,7 +130,7 @@ DDS中各个监听器的继承关系
 
 #### 2.2.2. 域模块
 
-在发布订阅模型中，理论上每个计算机上的中间件都需要掌握全局的节点信息，以提供分布式的数据传输服务。但在实际应用中，可能存在需要隔离的情况，例如网络中的节点数量过于庞大，掌握全局信息会付出巨大的代价，或者从属于不同分区的小组之间不希望互相干扰。为了解决隔离的问题，DDS引入了域的概念。每个参与通信的计算机都可以加入一个或多个域，相同域内的节点可以互相通信，不同域之间的节点则不会有数据交互。DDS中使用 DomainId_t 来唯一标识一个域。域参与者实体是DDS的入口，用户创建一个域参与者表示该程序想要在指定的域中交互数据。域模型示意图参见下图，一个应用程序可以在多个域中交互数据。
+在发布订阅模型中，理论上每个计算机上的中间件都需要掌握全局的节点信息，以提供分布式的数据传输服务。但在实际应用中，可能存在需要隔离的情况，例如网络中的节点数量过于庞大，掌握全局信息会付出巨大的代价，或者从属于不同分区的小组之间不希望互相干扰。为了解决隔离的问题，DDS引入了域的概念。每个参与通信的计算机都可以加入一个或多个域，相同域内的节点可以互相通信，不同域之间的节点则不会有数据交互。DDS中使用 DomainId 来唯一标识一个域。域参与者实体是DDS的入口，用户创建一个域参与者表示该程序想要在指定的域中交互数据。域模型示意图参见下图，一个应用程序可以在多个域中交互数据。
 
 ![](./images/DDS中域与域参与者概念.jpg)
 
@@ -152,6 +151,7 @@ DDS中域与域参与者概念
 | ^ | DomainParticipantFactory::set_default_participant_qos |
 | 自身QoS管理 | DomainParticipantFactory::set_qos |
 | ^ | DomainParticipantFactory::get_qos |
+
 
 ##### 2.2.2.2. 域参与者
 
@@ -198,6 +198,7 @@ DDS中域与域参与者概念
 | ^ | DomainParticipant::get_discovered_topic_data |
 | 存活性管理 | DomainParticipant::assert_liveliness |
 
+
 #### 2.2.3. 主题模块
 
 | 功能 | 接口 |
@@ -212,6 +213,7 @@ DDS中域与域参与者概念
 | ^ | Topic::get_qos |
 | 获取主题信息 | Topic::get_type_name |
 | ^ | Topic::get_name |
+
 
 ##### 2.2.3.1. 类型支持
 
@@ -248,6 +250,7 @@ DDS中域与域参与者概念
 | ^ | Publisher::wait_for_acknowledgments |
 | ^ | Publisher::suspend_publications |
 | ^ | Publisher::resume_publications |
+
 
 ##### 2.2.4.2. 数据写者
 
@@ -286,6 +289,7 @@ DDS中域与域参与者概念
 | 其他 | DataWriter::wait_for_acknowledgments |
 | ^ | DataWriter::flush |
 
+
 #### 2.2.5. 订阅模块
 
 ##### 2.2.5.1. 订阅者
@@ -312,6 +316,7 @@ DDS中域与域参与者概念
 | ^ | Subscriber::end_access |
 | ^ | Subscriber::get_datareaders |
 | ^ | Subscriber::notify_datareaders |
+
 
 ##### 2.2.5.2. 数据读者
 
@@ -343,16 +348,17 @@ DDS中域与域参与者概念
 | ^ | DataReader::delete_contained_entities |
 | 其他 | DataReader::wait_for_historical_data |
 
+
 ##### 2.2.5.3. 获取主题数据
 
 当数据样本到达订阅端时，DDS底层会根据主题匹配信息分发给不同的数据读者去处理，当完成处理（资源限制等QoS配置）时，数据读者将把该数据样本存储在底层的队列中，并通知用户，再等待用户通过接口来取出该数据样本，DDS通知用户数据到达的方式有两种：异步监听方式以及同步等待方式，用户通过数据读者的读取数据接口访问底层队列中的数据样本，这些接口的摘要信息参见下表，详细信息参见相应的接口说明。用户可以通过多种方式访问底层存储的队列数据：
 
-1.  提供样本深拷贝以及零拷贝（仅提供数据样本在底层队列中的指针或者引用）两种方式；
-2.  指定最大获取数量；
-3.  访问处于指定状态的样本，样本状态由 SampleStateKind 、 ViewStateKind 、 InstanceStateKind 三个状态定义；
-4.  按照数据实例访问，包括指定数据实例以及按数据实例顺序；
-5.  按照样本的顺序依次访问；
-6.  读取/取出两种访问方法，其中读取操作不从底层队列中删除，而取出操作则从底层维护的样本中删除；
+1. 提供样本深拷贝以及零拷贝（仅提供数据样本在底层队列中的指针或者引用）两种方式；
+2. 指定最大获取数量；
+3. 访问处于指定状态的样本，样本状态由 SampleStateKind 、 ViewStateKind 、 InstanceStateKind 三个状态定义；
+4. 按照数据实例访问，包括指定数据实例以及按数据实例顺序；
+5. 按照样本的顺序依次访问；
+6. 读取/取出两种访问方法，其中读取操作不从底层队列中删除，而取出操作则从底层维护的样本中删除；
 
 | 分类 | 接口 | 说明 |
 | --- | --- | --- |
@@ -369,6 +375,7 @@ DDS中域与域参与者概念
 | ^ | ExampleDataReader::take_w_condition | 同 ExampleDataReader::take |
 | ^ | ExampleDataReader::take_next_instance_w_condition | 同 ExampleDataReader::take_next_instance |
 | 归还空间 | ExampleDataReader::return_loan | 配合实现零拷贝 |
+
 
 ### 2.3. QoS定义
 
