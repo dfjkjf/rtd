@@ -251,16 +251,13 @@ statefulwriter被动状态机
 
 ### 4.4. StatefulReader
 
-StatefulReader同样存在两个状态机，其中一个状态机就是可靠重传的过程：
+StatefulReader同样存在两个状态机，其中一个为主动状态机，主动状态机就是可靠重传的过程：
 
-- waiting状态，等待底层接收包含Heartbeat的子消息，当FinalFlag未设置时进入must_send_ack状态；当FinalFlag设置但LivenessFlag未设置时进入may_send_ack状态；
+- waiting状态，匹配到关联的writer，当FinalFlag未设置时进入must_send_ack状态；当FinalFlag设置但LivenessFlag未设置时进入may_send_ack状态；
 - must_send_ack状态，在响应延迟时间后发送Acknack进入waiting状态；
 - may_send_ack状态，当WP不存在reader未接收到的更改时进入waiting状态；存在时进入must_send_ack状态；
 
-另一个状态机展示reader：
-
-- announcing状态，当存在未被反馈的数据样本时，应该周期性的发送HB子消息来触发读者确认状态；
-
+另一个为被动状态机（由底层消息驱动），当从底层收到DATA子消息后将相应的负载反序列化并加入到关联的HistoryCache中，直到读者被删除。
 
 ![](./images/statefulreader状态机.jpg)
 
@@ -287,7 +284,7 @@ Spdp协议定义了每个参与者必须创建一对内置写者/读者实体，
 | 主题名 | DCPSParticipant | DCPSParticipant |
 | 类型名 | ParticipantBuiltinTopicData | ParticipantBuiltinTopicData |
 | QoS | Stateless等 | Stateless等 |
-| EntityId_t | {{00,01,00},c2} | {{00,01,00},c7} |
+| EntityId_t | {\{00,01,00\},c2} | {\{00,01,00\},c7} |
 | 说明 | 用于周期性发送自身包含自身信息的rtps消息 | 用于监听处理 |
 
 ParticipantBuiltinTopicData的结构如下图所示，其中比较重要的成员包括：
@@ -309,7 +306,7 @@ ParticipantBuiltinTopicData结构
 | 主题名 | DCPSPublication | DCPSPublication |
 | 类型名 | DiscoveredWriterData | DiscoveredWriterData |
 | QoS | {Stateful、内存持久化等} | {Stateful、内存持久化等} |
-| EntityId_t | {{00,00,03},c2} | {{00,00,03},c7} |
+| EntityId_t | {\{00,00,03\},c2} | {\{00,00,03\},c7} |
 | 说明 | 用于发送数据写者相关信息 | 用于接收数据写者相关信息 |
 
 | 名称 | SEDPBuiltinSubscriptionsWriter | SEDPBuiltinSubscriptionsReader |
@@ -317,7 +314,7 @@ ParticipantBuiltinTopicData结构
 | 主题名 | DCPSSubscription | DCPSSubscription |
 | 类型名 | DiscoveredReaderData | DiscoveredReaderData |
 | QoS | {Stateful、内存持久化等} | {Stateful、内存持久化等} |
-| EntityId_t | {{00,00,04},c2} | {{00,00,04},c7} |
+| EntityId_t | {\{00,00,04\},c2} | {\{00,00,04\},c7} |
 | 说明 | 用于发送数据读者相关信息 | 用于接收数据读者相关信息 |
 
 DiscoveredWriterData以及DiscoveredReaderData所包含的信息如下图所示，其中重要的成员包括：
