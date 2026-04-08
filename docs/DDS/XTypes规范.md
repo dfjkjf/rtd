@@ -182,4 +182,91 @@ CDR和比较流行的其他序列化库的对比：Google ProtoBuf、Apache Thri
 
 当用户能够自己管理序列化以及反序列化时，可以跳过自定义数据结构的过程，直接使用内置的数据类型进行开发，简化整个开发的流程。
 
+## 7. 可变聚合类型的编码方式
 
+1. Member of mutable aggregated type (structure, union), version 1 encoding
+
+    1. 成员编码
+    
+    - using short PL encoding when both M.id <= 2^14 and M.value.ssize <= 2^16
+    ```
+    XCDR[1] << {M : MMEMBER} =
+        XCDR
+            << ALIGN(4)
+            << { FLAG_I + FLAG_M + M.id : UInt16 }
+            << { M.value.ssize : UInt16 }
+            << PUSH( ORIGIN=0 )
+            << { M.value : M.value.type }
+    ```
+    - using long PL encoding
+    ```
+    XCDR[1] << {M : MMEMBER} =
+        XCDR
+            << ALIGN(4)
+            << { FLAG_I + FLAG_M + PID_EXTENDED : UInt16 }
+            << { slength=8 : UInt16 }
+            << { M.id : UInt32 }
+            << { M.value.ssize : UInt32 }
+            << PUSH( ORIGIN=0 )
+            << { M.value : M.value.type }
+    ```
+
+    - FLAG_I：16bit首位，只在RTPS发现类型中使用，用户自定义类型永不置位
+    - FLAG_M：16bit第二位，Must Understand option
+    - M.id：16bit后14位，聚合成员ID，从0开始0x3F00
+    - M.value.ssize：成员长度
+    - PUSH( ORIGIN=0 )：开始写成员
+    - M.value：真实成员
+
+    2. Structures with extensibility MUTABLE, version 1 encoding
+    ```
+    XCDR[1] << {O : MSTRUCT_TYPE} =
+        XCDR
+            << { O.member[i] : MMEMBER }*
+            << { PID_SENTINEL : UInt16 }
+            << { length = 0 : UInt16 }
+    ```
+
+    3. Unions with extensibility MUTABLE, version 1 encoding
+    ```
+    XCDR[1] << {O : MUNION_TYPE} =
+        XCDR
+            << { O.disc : MMEMBER }
+            << { O.selected_member : MMEMBER }?
+            << { PID_SENTINEL : UInt16 }
+            << { length = 0 : UInt16 }
+    ```
+
+2. Member of mutable aggregated type (structure, union), version 2 encoding
+
+    1. 成员编码
+    ```
+    XCDR[2] << {M : MMEMBER} =
+        XCDR
+            << { EMHEADER1(M) : UInt32 }
+            << IF (LC(M)>=4) { NEXTINT(M) : UInt32 }
+            << IF (LC(M)>=5) XCDR.offset = XCDR.offset-4
+            << { M.value : M.value.type }
+    ```
+
+    - EMHEADER1 = (M_FLAG<<31) + (LC<<28) + M.id,
+    - LC: LC 是一个 3 位的成员长度编码，它决定了 EMHEADER 是否包含额外的4个字节（即 NEXTINT 字段）
+    - M.id：32bit后28位，聚合成员ID，从0至0x0FFFFFFF
+
+    2. Structures with extensibility MUTABLE, version 2 encoding
+    ```
+    XCDR[2] << {O : MSTRUCT_TYPE} =
+        XCDR
+            << { DHEADER(O) : UInt32 }
+            << { O.member[i] : MMEMBER }*
+    ```
+
+    3. Unions with extensibility MUTABLE, version 2 encoding
+    ```
+    XCDR[2] << {O : MUNION_TYPE} =
+        XCDR
+            << { DHEADER(O) : UInt32 }
+            << { O.disc : MMEMBER }
+            << { O.selected_member : MMEMBER }?
+    ```
+    - DHEADER(O) = O.ssize
