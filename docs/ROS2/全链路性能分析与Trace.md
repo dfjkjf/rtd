@@ -1049,3 +1049,1004 @@ Deserialization
 
 这会直接进入你熟悉的 **Fast-CDR / Fast DDS / ROS2 loaned message / zero-copy** 领域。
 
+---
+
+可以。我们先不讲概念，直接做一个**最小可运行实验**：
+
+> 用 `ros2_tracing + LTTng` 抓一个 ROS2 `talker → listener`，然后从 Trace 里回答：**消息什么时候发布、什么时候被执行、callback 花了多久。**
+
+你是 C++ 背景，所以整个实验都用 C++。
+
+---
+
+# 1. 先理解 Trace 到底在干什么
+
+普通运行：
+
+```text
+talker
+   │
+   │ publish()
+   ▼
+DDS
+   │
+   ▼
+listener
+   │
+   ▼
+callback()
+```
+
+我们肉眼看不到中间发生了什么。
+
+Trace 相当于在代码关键位置插入：
+
+```text
+10:00:00.001  publish
+10:00:00.002  DDS write
+10:00:00.003  callback ready
+10:00:00.004  callback start
+10:00:00.005  callback end
+```
+
+然后 LTTng 负责：
+
+```text
+程序
+ ↓
+tracepoint
+ ↓
+LTTng
+ ↓
+trace buffer
+ ↓
+CTF trace
+ ↓
+babeltrace / tracetools分析
+```
+
+所以：
+
+> **ros2_tracing 决定“记录哪些 ROS2 事件”，LTTng 负责“把这些事件高效记录下来”。**
+
+---
+
+# 2. 先确认环境
+
+你的环境是 Ubuntu 22.04 + ROS2 Humble，所以先检查：
+
+```bash
+lsb_release -a
+```
+
+以及：
+
+```bash
+printenv ROS_DISTRO
+```
+
+应该类似：
+
+```text
+Ubuntu 22.04
+humble
+```
+
+然后：
+
+```bash
+which lttng
+```
+
+如果没有：
+
+```text
+lttng: command not found
+```
+
+说明还没安装。
+
+---
+
+# 3. 安装 LTTng
+
+先：
+
+```bash
+sudo apt update
+```
+
+然后：
+
+```bash
+sudo apt install \
+    lttng-tools \
+    lttng-modules-dkms \
+    liblttng-ust-dev \
+    babeltrace
+```
+
+确认：
+
+```bash
+lttng --version
+```
+
+例如：
+
+```text
+lttng-tools 2.x
+```
+
+---
+
+# 4. 安装 ROS2 tracing
+
+Humble 通常可以直接：
+
+```bash
+sudo apt install \
+    ros-humble-ros2trace \
+    ros-humble-tracetools
+```
+
+然后：
+
+```bash
+source /opt/ros/humble/setup.bash
+```
+
+检查：
+
+```bash
+ros2 trace -h
+```
+
+如果能看到帮助信息，就说明 ROS2 tracing 工具已经进入环境。
+
+---
+
+# 5. 第一个实验：talker → listener
+
+先开终端 A：
+
+```bash
+source /opt/ros/humble/setup.bash
+
+ros2 run demo_nodes_cpp talker
+```
+
+终端 B：
+
+```bash
+source /opt/ros/humble/setup.bash
+
+ros2 run demo_nodes_cpp listener
+```
+
+然后确认：
+
+```bash
+ros2 topic hz /chatter
+```
+
+大概：
+
+```text
+average rate: 10
+```
+
+现在我们知道系统正常。
+
+---
+
+# 6. 现在开始 Trace
+
+**不要先运行 talker。**
+
+先开第三个终端：
+
+```bash
+source /opt/ros/humble/setup.bash
+```
+
+创建 trace session。
+
+最简单的方式：
+
+```bash
+ros2 trace
+```
+
+如果你的 Humble 环境要求指定 session，可以先：
+
+```bash
+ros2 trace -h
+```
+
+你会看到相关参数。
+
+不同 Humble 安装版本的 `ros2 trace` CLI 参数可能略有差异，所以这里不要死记命令；**以你机器上的 `ros2 trace -h` 为准**。
+
+---
+
+# 7. 一个更底层的 LTTng 实验
+
+我建议你**一定做一次**。
+
+因为你要做的是中间件性能优化，而不是只会：
+
+```bash
+ros2 trace
+```
+
+我们直接使用 LTTng。
+
+先：
+
+```bash
+lttng create ros2_demo
+```
+
+成功后类似：
+
+```text
+Session ros2_demo created.
+Traces will be written in ...
+```
+
+---
+
+# 8. 查看 tracepoint
+
+LTTng 可以查看当前有哪些用户态 tracepoint：
+
+```bash
+lttng list --userspace
+```
+
+你应该能够看到：
+
+```text
+tracetools
+```
+
+相关事件。
+
+ROS2 tracing 的核心就在这里。
+
+例如可能看到：
+
+```text
+ros2:rclcpp_publish
+ros2:rclcpp_subscription_init
+ros2:rclcpp_callback_register
+...
+```
+
+具体事件名称以你的 Humble 安装版本为准。
+
+---
+
+# 9. 选择 ROS2 tracepoint
+
+可以先让 LTTng 抓所有用户态事件：
+
+```bash
+lttng enable-event --userspace 'ros2:*'
+```
+
+然后：
+
+```bash
+lttng start
+```
+
+现在：
+
+```text
+Trace 正在运行
+```
+
+---
+
+# 10. 运行你的 ROS2 程序
+
+这时候再启动：
+
+```bash
+ros2 run demo_nodes_cpp talker
+```
+
+另一个终端：
+
+```bash
+ros2 run demo_nodes_cpp listener
+```
+
+让它运行：
+
+```text
+10～20 秒
+```
+
+然后停止：
+
+```bash
+Ctrl+C
+```
+
+---
+
+# 11. 停止 Trace
+
+回到 LTTng 终端：
+
+```bash
+lttng stop
+```
+
+然后：
+
+```bash
+lttng destroy
+```
+
+注意：
+
+```bash
+lttng destroy
+```
+
+**不是删除 trace 数据。**
+
+它是结束 session。
+
+你的 trace 数据已经写到了之前创建的 trace directory。
+
+可以：
+
+```bash
+ls
+```
+
+或者：
+
+```bash
+find . -maxdepth 3 -type f
+```
+
+看看生成的文件。
+
+---
+
+# 12. 用 Babeltrace 看 Trace
+
+这一步非常重要。
+
+LTTng 保存的不是：
+
+```text
+txt
+csv
+```
+
+而是：
+
+```text
+CTF
+(Common Trace Format)
+```
+
+用：
+
+```bash
+babeltrace <trace目录>
+```
+
+例如：
+
+```bash
+babeltrace ~/lttng-traces/ros2_demo*
+```
+
+具体目录以 `lttng create` 的输出为准。
+
+你会看到大量类似：
+
+```text
+ros2:rclcpp_publish
+ros2:rclcpp_callback_register
+...
+```
+
+---
+
+# 13. 现在开始“读 Trace”
+
+假设你看到：
+
+```text
+10:15:01.123456
+ros2:rclcpp_publish
+
+10:15:01.223789
+ros2:rclcpp_publish
+```
+
+说明 publisher 大约：
+
+```text
+100.333 ms
+```
+
+发布一次。
+
+这和：
+
+```bash
+ros2 topic hz /chatter
+```
+
+得到的：
+
+```text
+10 Hz
+```
+
+是一致的。
+
+---
+
+# 14. 但是 Trace 真正厉害的地方在这里
+
+假设：
+
+```text
+T1 = publish
+T2 = callback_start
+T3 = callback_end
+```
+
+那么：
+
+```text
+T2 - T1
+```
+
+就是你关心的：
+
+```text
+Publish → Callback
+```
+
+而：
+
+```text
+T3 - T2
+```
+
+是：
+
+```text
+Callback execution
+```
+
+例如：
+
+```text
+publish
+10:15:01.123456
+
+callback_start
+10:15:01.125200
+
+callback_end
+10:15:01.126100
+```
+
+那么：
+
+```text
+Publish → Callback
+= 1.744 ms
+
+Callback execution
+= 0.900 ms
+```
+
+于是：
+
+```text
+总延迟
+├── Publish → Callback = 1.744ms
+└── Callback           = 0.900ms
+```
+
+---
+
+# 15. 但这里有一个关键陷阱
+
+**不要看到 `rclcpp_publish` 就认为这等于 DDS DataWriter::write()。**
+
+这是非常重要的。
+
+：
+
+```text
+rclcpp_publish
+```
+
+发生在 ROS2 上层。
+
+后面还可能经过：
+
+```text
+rclcpp
+ ↓
+rcl
+ ↓
+rmw
+ ↓
+Fast DDS
+ ↓
+DataWriter
+ ↓
+RTPS
+ ↓
+transport
+```
+
+所以：
+
+```text
+rclcpp_publish
+```
+
+和：
+
+```cpp
+DataWriter::write()
+```
+
+不是同一个时间点。
+
+这正好与你之前研究的：
+
+> `talker → listener` 源码链
+
+连接起来。
+
+---
+
+# 16. 第二个实验：故意制造 100ms 延迟
+
+现在开始真正有价值的实验。
+
+修改 listener：
+
+```cpp
+void topic_callback(
+    const std_msgs::msg::String::SharedPtr msg)
+{
+    std::this_thread::sleep_for(
+        std::chrono::milliseconds(100));
+
+    RCLCPP_INFO(
+        this->get_logger(),
+        "I heard: '%s'",
+        msg->data.c_str());
+}
+```
+
+重新编译。
+
+然后：
+
+```text
+talker
+ ↓
+listener
+```
+
+重新 Trace。
+
+---
+
+# 17. 你应该观察什么？
+
+你会发现：
+
+```text
+callback execution
+```
+
+明显增加。
+
+例如：
+
+```text
+callback_start
+10:20:00.000
+
+callback_end
+10:20:00.100
+```
+
+因此：
+
+```text
+callback execution ≈ 100ms
+```
+
+---
+
+# 18. 然后把 publisher 提高到 30Hz
+
+原来：
+
+```text
+10Hz
+```
+
+现在：
+
+```text
+30Hz
+```
+
+而 callback：
+
+```text
+100ms
+```
+
+意味着：
+
+```text
+Producer = 30 msg/s
+Consumer ≈ 10 msg/s
+```
+
+于是：
+
+```text
+Queue
+ ↓
+逐渐积压
+```
+
+然后 Trace 中你应该观察：
+
+```text
+callback
+callback
+callback
+callback
+...
+```
+
+之间的时间关系。
+
+这就把 Week 7 的：
+
+```text
+Producer > Consumer
+        ↓
+Queue accumulation
+        ↓
+Latency ↑
+```
+
+用 Trace 真正观察出来。
+
+---
+
+# 19. 再做一个实验：Executor 阻塞
+
+这个实验比上面的更重要。
+
+建立两个 subscription：
+
+```text
+/topic_a
+/topic_b
+```
+
+A：
+
+```cpp
+void callback_a(...)
+{
+    std::this_thread::sleep_for(
+        std::chrono::milliseconds(100));
+}
+```
+
+B：
+
+```cpp
+void callback_b(...)
+{
+    RCLCPP_INFO(...);
+}
+```
+
+使用：
+
+```text
+SingleThreadedExecutor
+```
+
+---
+
+# 20. Trace 应该呈现什么？
+
+理论上：
+
+```text
+callback_A_start
+       │
+       │ 100ms
+       │
+callback_A_end
+       │
+       ▼
+callback_B_start
+```
+
+如果 B 的消息在 A 执行期间已经 ready：
+
+```text
+B ready
+   │
+   │ 100ms waiting
+   ▼
+B start
+```
+
+这时候你真正测出来：
+
+```text
+Executor wait ≈ 100ms
+```
+
+---
+
+# 21. 这就是 Trace 和普通 ros2 topic 工具的区别
+
+`ros2 topic hz`：
+
+```text
+/chatter = 10Hz
+```
+
+你只知道：
+
+> 频率正常。
+
+Trace：
+
+```text
+publish
+   ↓ 2ms
+ready
+   ↓ 98ms
+callback_start
+   ↓ 100ms
+callback_end
+```
+
+你知道：
+
+> **问题发生在 callback 执行等待阶段。**
+
+这已经是性能工程的思维。
+
+---
+
+# 22. LTTng 在这里到底干什么？
+
+你可以把三者理解成：
+
+```text
+ROS2 tracing
+    │
+    │ 定义/提供 ROS2 tracepoints
+    ▼
+LTTng
+    │
+    │ 高效采集事件
+    ▼
+CTF trace
+    │
+    ▼
+Babeltrace
+    │
+    ▼
+人分析
+```
+
+所以不要把：
+
+```text
+Trace
+LTTng
+ros2_tracing
+```
+
+当成三个互相竞争的工具。
+
+它们是一个链条。
+
+---
+
+# 23. 再往下一层：Linux Scheduler
+
+这就是 Week 8 后半段真正要做的。
+
+现在你已经可以看到：
+
+```text
+callback_start
+```
+
+但你还不知道：
+
+> **为什么 callback 这么晚才运行？**
+
+于是继续往 Linux kernel：
+
+```text
+ROS2 Trace
+    ↓
+LTTng
+    ↓
+Linux scheduler
+    ↓
+perf / ftrace
+```
+
+例如：
+
+```text
+callback ready
+       │
+       │ 50ms
+       ▼
+callback start
+```
+
+然后用 scheduler trace 发现：
+
+```text
+Executor thread
+      ↓
+Runnable
+      ↓
+没有获得 CPU
+      ↓
+其他线程运行
+      ↓
+50ms
+      ↓
+Executor thread running
+```
+
+那么最终结论就从：
+
+> “ROS2 callback 延迟”
+
+变成：
+
+> **Executor 所在线程处于 runnable 状态，但由于 CPU contention 没有及时获得执行机会。**
+
+这个结论的含金量就完全不一样了。
+
+---
+
+# 24. 你现在先做这一个实验
+
+不要一次做太复杂。
+
+你的第一轮实验只做：
+
+```text
+talker → listener
+```
+
+然后：
+
+### Step 1
+
+```bash
+ros2 run demo_nodes_cpp talker
+```
+
+### Step 2
+
+```bash
+ros2 run demo_nodes_cpp listener
+```
+
+### Step 3
+
+```bash
+lttng create ros2_demo
+```
+
+### Step 4
+
+```bash
+lttng enable-event --userspace 'ros2:*'
+```
+
+### Step 5
+
+```bash
+lttng start
+```
+
+### Step 6
+
+让 talker/listener 跑 10 秒。
+
+### Step 7
+
+```bash
+lttng stop
+lttng destroy
+```
+
+### Step 8
+
+找到 trace directory：
+
+```bash
+find ~/ -type d -name 'ros2_demo*' 2>/dev/null
+```
+
+### Step 9
+
+用：
+
+```bash
+babeltrace <trace目录>
+```
+
+查看。
+
+---
+
+## 你第一轮不要急着分析所有事件
+
+只要先找到这几个东西：
+
+```text
+rclcpp_publish
+```
+
+以及 callback 相关事件。
+
+**把你的 `ros2 trace -h` 输出和 `babeltrace` 输出中涉及 `rclcpp` / `callback` 的几行贴给我。**
+
+我下一步可以直接带你**逐行读 Trace**，把它还原成：
+
+```text
+publish
+   ↓
+rclcpp
+   ↓
+rmw
+   ↓
+Fast DDS
+   ↓
+receive
+   ↓
+Executor
+   ↓
+callback
+```
+
+然后我们再做第二个实验：**故意让 callback 阻塞 100ms，用 Trace 证明 Executor 为什么会产生延迟。**
+
